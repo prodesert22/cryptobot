@@ -167,8 +167,7 @@ class Coin(commands.Cog):
         await ctx.send(embed=emb)
         
     @commands.command(
-        name='crypto', 
-        aliases=['price,coin'],
+        name='crypto',
         usage='#crypto <symbol> <symbol2>[USD] <exchange>[default binance]',
         description='Get price in USD, volume, high, low for coin in exchange.',
         brief='#crypto btc'
@@ -205,6 +204,23 @@ class Coin(commands.Cog):
             )
         await ctx.send(embed=emb)
 
+    @commands.command(
+        name='price',
+        usage='#price <symbol> <symbol2>[USDT]',
+        description='Get current price of coin.',
+        brief='#price avax \n #price eth btc'
+    )
+    @commands.cooldown(1, 15, commands.BucketType.user)
+    async def price(self, ctx, symbol: str, symbol2: str = 'USDT') -> None:
+        price = await current_price(symbol, symbol2)
+        price = format_tostring_value(price)
+        emb = discord.Embed(
+            title = "Current price",
+            description = f'** 1 {symbol.upper()} equal {price} {symbol2.upper()}**',
+            colour = discord.Color.green(),
+        )
+        await ctx.send(embed=emb)
+        
     @commands.command(
         name='exchange', 
         aliases=['listexchange'],
@@ -247,7 +263,11 @@ class Coin(commands.Cog):
             await menssagem.add_reaction('➡️')
             while True:
                 def check(reaction, user):
-                    return reaction.message.id == menssagem.id and (str(reaction.emoji) == '⬅️' or str(reaction.emoji) == '➡️') and not user.bot == True
+                    return (
+                        reaction.message.id == menssagem.id
+                        and str(reaction.emoji) in ['⬅️', '➡️']
+                        and user.bot != True
+                    )
                 try:
                     r = await self.bot.wait_for('reaction_add', check=check, timeout=10)
                     if(str(r[0].emoji) == '⬅️' and not id_pag == 0):
@@ -293,9 +313,14 @@ class Coin(commands.Cog):
                 amount = abs(param3)
             else:
                 raise commands.BadArgument('Amount is invalid')
-
+            
         convert_amount = await convert_price(symbol, symbol2, amount)
-        await ctx.send(f'{amount} {symbol} equal {convert_amount} {symbol2}')
+        emb = discord.Embed(
+            title = "Coversion",
+            description = f'** {amount} {symbol.upper()} equal {convert_amount} {symbol2.upper()}**',
+            colour = discord.Color.green(),
+        )
+        await ctx.send(embed=emb)
         
 def setup(bot):
     bot.add_cog(Coin(bot))

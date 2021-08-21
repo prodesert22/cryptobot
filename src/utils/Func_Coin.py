@@ -317,7 +317,7 @@ async def current_price(symbol1: str, symbol2: str) -> Decimal:
         raise Generic_Not_Found(error['msg'] )
     raise Generic_Error(f'Error - status code: {response.status}')
 
-async def convert_price(from_symbol: str, to_symbol: str, amount: float) -> Decimal:
+async def convert_price(from_symbol: str, to_symbol: str, amount: float) -> str:
     """Convert coin/token in other coin/token 
 
     Args:
