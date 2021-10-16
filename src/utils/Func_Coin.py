@@ -142,7 +142,7 @@ async def get_ohlc_binance(
         "limit": limit,
     }
     response = await fetch(
-        url = f'https://api.binance.com/api/v3/klines', 
+        url = 'https://api.binance.com/api/v3/klines', 
         params = params, 
         pass_statuscode = True,
     )
@@ -306,7 +306,7 @@ async def current_price(symbol1: str, symbol2: str) -> Decimal:
         "symbol": f"{symbol1}{symbol2}"
     }
     response = await fetch(
-        url = f'https://api.binance.com/api/v3/ticker/price', 
+        url = 'https://api.binance.com/api/v3/ticker/price', 
         params = params, 
         pass_statuscode = True,
     )

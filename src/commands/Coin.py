@@ -316,7 +316,7 @@ class Coin(commands.Cog):
             
         convert_amount = await convert_price(symbol, symbol2, amount)
         emb = discord.Embed(
-            title = "Coversion",
+            title = "Conversion",
             description = f'** {amount} {symbol.upper()} equal {convert_amount} {symbol2.upper()}**',
             colour = discord.Color.green(),
         )
