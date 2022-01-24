@@ -17,21 +17,22 @@ Create a discord bot [here](https://discord.com/developers/applications), once c
 
 ### Create python env (**Optional**)
 
-`python -m venv cryptobot-env`
+`python -m venv env`
 
 #### Activate env
 
-`source cryptobot-env/bin/activate`
+`source env/bin/activate`
 
 ### Install depencies
  `pip install -r requirements.txt`
 
 ### Run
-Paste your token in 
+copy and paste `config_example.ini` to `config.ini` and paste your token in 
 ```
-src/keys/Tokens.py
+config_example.ini
 
-BOT_TOKEN = "YOUR BOT TOKEN HERE"
+[Token]
+token=
 ```
 
 And run 

@@ -1,4 +1,3 @@
 discord
-ccxt
 plotly
 kaleido

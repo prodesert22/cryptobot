@@ -1,12 +1,9 @@
 import asyncio
 import aiohttp
-import ccxt
 import json
 import os
-import requests
 
 from aiohttp.client_reqrep import ClientResponse
-from ccxt.base.errors import BadSymbol
 from datetime import datetime
 from decimal import Decimal
 from discord.ext.commands import BadArgument
@@ -244,61 +241,6 @@ async def chart(
     img_byteio.seek(0)
     return img_byteio
 
-def price_exchange(exchange: str, symbol1: str, symbol2: str) -> Dict[str, Any]:
-    """Get price for symbom in specified exchange
-
-    Args:
-        exchange (str): binance, coibase...
-        symbol1 (str): symbol for coin/token
-        symbol2 (str): symbol for coin/token
-
-    Raises:
-        Generic_Not_Found: raise in not found exchange or symbol
-        Generic_Error: raise case not key in return on ccxt
-
-    Returns:
-        Dict[str, Any]
-    """
-    exchange = exchange.lower()
-    symbol1 = symbol1.upper()
-    symbol2 = symbol2.upper()
-    try:
-        exchange_class = getattr(ccxt, exchange)
-        exchange = exchange_class()
-        ticker = exchange.fetch_ticker(f'{symbol1}/{symbol2}')
-        price = (Decimal(ticker['ask']) + Decimal(ticker['bid'])) / 2
-        price = format_tostring_value(price)
-        format_value = lambda c: float(c) if c is not None else 0
-        change = format_value(ticker['change'])
-        change = format_tostring_value(change)
-        percentage = format_value(ticker['percentage'])
-        percentage = format_tostring_value(percentage)
-        timestamp =  ticker['timestamp']
-        volume_symbol = format_value(ticker['baseVolume'])
-        volume_symbol = format_tostring_value(volume_symbol)
-        volume = format_value(ticker['quoteVolume'])
-        volume = format_tostring_value(volume)
-        low = format_value(ticker['low'])
-        low = format_tostring_value(low)
-        high = format_value(ticker['high'])
-        high = format_tostring_value(high)
-        return {
-            'price': price,
-            'change': change,
-            'percentage': percentage,
-            'timestamp': timestamp,
-            'volume_symbol': volume_symbol,
-            'volume': volume,
-            'low': low,
-            'high': high
-        }
-    except AttributeError as e:
-        raise Generic_Not_Found(f'Not found exchange: {exchange}') from e
-    except BadSymbol as e:
-        raise Generic_Not_Found(e) from e
-    except KeyError as e:
-        raise Generic_Error(e)
-
 async def current_price(symbol1: str, symbol2: str) -> Decimal:
     symbol1 = symbol1.upper()
     symbol2 = symbol2.upper()
@@ -461,12 +403,6 @@ async def get_exchange_logo(exchange: str) -> Optional[str]:
 
     info = response.json()
     return info['image'] 
-
-def list_exchanges() -> str:
-    return ''.join(
-        '\n' if (cont % 7 == 0) else f' ** - {exchange} ** '
-        for cont, exchange in enumerate(ccxt.exchanges)
-    )
 
 async def exchange_info(name: str) -> Dict[str, Any]:
     name = name.lower()

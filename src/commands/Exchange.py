@@ -5,7 +5,7 @@ import os
 
 from datetime import datetime
 from discord.ext import commands
-from src.utils.Func_Coin  import list_exchanges, exchange_info 
+from src.utils.Func_Coin  import exchange_info 
 
 import src.utils.Func_Coin 
 from importlib import reload
@@ -28,17 +28,6 @@ class Exchange(commands.Cog, name="Exchanges"):
 
     def is_admin(self):
         return self.admin
-    
-    @commands.command(name='exchanges',
-    usage='#exchanges',
-    description='Return all exchanges supported.',
-    brief='#exchanges')
-    @commands.cooldown(1,15, commands.BucketType.channel)
-    async def exchanges(self, ctx):
-        emb = discord.Embed(title = "**List of supported exchanges**",
-                    description = list_exchanges(),
-                    colour = discord.Color.blue())
-        await ctx.send(embed=emb)
         
     @commands.command(name='exchangeinfo', aliases=['infoex'],
     usage='#exchangeinfo <exchange> ',

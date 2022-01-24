@@ -21,8 +21,7 @@ from src.utils.Func_Coin import (
     get_exchange_logo,
     get_ohlc_binance,
     get_crypto_exchanges,
-    price_exchange,
-) 
+)
 from src.utils.Converts import Convert_Timeframes, Convert_to_Timeframes, Timeframe
 
 class Coin(commands.Cog):
@@ -164,44 +163,6 @@ class Coin(commands.Cog):
             text='Powered by coingecko', 
             icon_url='https://static.coingecko.com/s/thumbnail-007177f3eca19695592f0b8b0eabbdae282b54154e1be912285c9034ea6cbaf2.png'
         )
-        await ctx.send(embed=emb)
-        
-    @commands.command(
-        name='crypto',
-        usage='#crypto <symbol> <symbol2>[USD] <exchange>[default binance]',
-        description='Get price in USD, volume, high, low for coin in exchange.',
-        brief='#crypto btc'
-    )
-    @commands.cooldown(1, 15, commands.BucketType.user)
-    async def crypto(
-        self, 
-        ctx, 
-        symbol1: str, 
-        symbol2: str = 'USDT', 
-        exchange: str ='binance',
-    ) -> None:
-        dic = price_exchange(exchange, symbol1, symbol2)
-        emb = discord.Embed(title = "**{}/USD**".format(symbol1.upper()),
-                description = "Price: **{}**".format(dic['price']),
-                timestamp= datetime.utcfromtimestamp(dic['timestamp']/1000),
-                colour = discord.Color.blue())
-        info_str = 'High: **{}**\n'.format(dic['high'])
-        info_str += 'Low: **{}**\n'.format(dic['low'])
-        info_str += 'Volume in {}: **{}**\n'.format(symbol1.upper(),dic['volume_symbol'])
-        info_str += 'Volume in USD: **{}**\n'.format(dic['volume'])
-        info_str += 'Change in USD: **{}**\n'.format(dic['change'])
-        info_str += 'Percentage change: **{}%**\n'.format(dic['percentage'])
-        emb.add_field(name='24h Market Data', value=info_str,inline=False)
-        emb.set_footer(text='Exchange: {}'.format(exchange.lower()))
-        logo = await get_crypto_logo(symbol1)
-        if(logo):
-            emb.set_thumbnail(url=logo)
-        exchange_logo = await get_exchange_logo(exchange)
-        if(exchange_logo):
-            emb.set_footer(
-                text='Exchange: {}'.format(exchange.lower()), 
-                icon_url=exchange_logo
-            )
         await ctx.send(embed=emb)
 
     @commands.command(
